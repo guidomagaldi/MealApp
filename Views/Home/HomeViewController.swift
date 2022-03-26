@@ -37,6 +37,7 @@ class HomeViewController : UIViewController {
         title = "Meal App"
         view.addSubview(homeFeedTable)
         updateView()
+        
 
     }
     
@@ -52,12 +53,12 @@ class HomeViewController : UIViewController {
     
     
     func updateView (){
-        vm.searchMeals { data in
-            print(data)
+        vm.searchMeals{
             self.homeFeedTable.reloadData()
         }
     }
 }
+
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
     
@@ -65,6 +66,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,16 +84,25 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
             
             cell.configureView(meal: meal)
         }
-  
-        
         return cell
     }
     
     // MARK: - Table view delegate
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // etc
-    }
+  
+        
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            
+            if vm.meals.count > indexPath.row {
+                let meal = vm.meals[indexPath.row]
+                print("Nombre del meal pulsado: \(meal.strMeal)")
+                let viewControllerDestination =  DetailViewController(meal: meal)
+                self.navigationController?.pushViewController(viewControllerDestination, animated: true)
+            }
+            
+            print("celda pulsada \(indexPath.row)")
+        }
+    
 }
 
 extension HomeViewController: UISearchResultsUpdating {

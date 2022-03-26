@@ -13,13 +13,16 @@ class MealsViewModel{
     var meals: [Meal] = []
    
 
-    func searchMeals(completion: @escaping ([Meal]) -> ()){
+    func searchMeals(completion: @escaping () -> ()){
         APICaller.shared.searchMeal { data in
+            DispatchQueue.main.async {
             switch data{
                 case.success(let meals):
                     self.meals = meals
+                    completion()
                 case .failure(let error):
                     print(error.localizedDescription)
+            }
             }
         }
     }
